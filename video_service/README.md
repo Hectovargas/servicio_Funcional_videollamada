@@ -22,12 +22,7 @@ cp .env.example .env
 # Editar .env con tus valores
 ```
 
-4. Ejecutar RabbitMQ (Docker):
-```bash
-docker run -d -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-```
-
-5. Ejecutar servidor:
+4. Ejecutar servidor:
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
@@ -46,4 +41,3 @@ Documentación API: http://localhost:8000/docs
 
 - La autenticación requiere Bearer token en header `Authorization`
 - Por ahora usa base de datos en memoria (se puede integrar Supabase después)
-- RabbitMQ debe estar corriendo para publicar eventos

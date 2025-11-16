@@ -7,9 +7,6 @@ class Settings(BaseSettings):
     JITSI_DOMAIN: str = "meet.jit.si"
     JITSI_APP_ID: str = "your-jitsi-app-id"
     
-    RABBITMQ_URL: str = "amqp://guest:guest@localhost:5672/"
-    RABBITMQ_EXCHANGE: str = "video.events"
-    
     SUPABASE_URL: Optional[str] = None
     SUPABASE_KEY: Optional[str] = None
     

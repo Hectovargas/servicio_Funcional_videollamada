@@ -19,7 +19,7 @@ La arquitectura fue diseñada para entornos de desarrollo y pruebas, con miras a
 ### Componentes principales
 
 - **Backend (FastAPI)**
-  API REST encargada de gestionar salas, participantes y publicación de eventos en RabbitMQ.
+  API REST encargada de gestionar salas y participantes.
 
 - **Frontend (React + Vite)**
   Interfaz de usuario con integración vía iframe hacia Jitsi.
@@ -39,7 +39,6 @@ video_service/
 │   ├── models.py
 │   ├── database.py
 │   ├── jwt_handler.py
-│   ├── rabbitmq.py
 │   └── routes/
 │       └── video.py
 ├── requirements.txt
@@ -52,10 +51,6 @@ video_service/
 - API REST para crear, unirse, listar y finalizar salas.
 - Almacenamiento temporal en memoria.
 - Autenticación basada en token de prueba (test-token).
-- Publicación de eventos en RabbitMQ:
-  - `video.room.created`
-  - `video.participant.joined`
-  - `video.room.ended`
 
 ## 🖥 Frontend (React + Vite)
 
@@ -148,26 +143,10 @@ npm run dev
 - Debería abrir automáticamente en el navegador
 - Puerto: 5173 (o el siguiente disponible si está ocupado)
 
-#### 3️⃣ RabbitMQ (Opcional)
-
-```bash
-docker run -d -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-```
-
-**Interfaz web:**
-- http://localhost:15672
-- Usuario: `guest`
-- Contraseña: `guest`
-
-**Puertos:**
-- 5672 AMQP
-- 15672 Panel web
-
 ### 📋 Orden de Inicio Recomendado
 
-1. RabbitMQ (opcional)
-2. Backend
-3. Frontend
+1. Backend
+2. Frontend
 
 ## 🎮 Cómo Usar la Aplicación
 
@@ -216,11 +195,6 @@ Debe devolver:
 - Debe cargar la pantalla inicial
 - Sin errores en la consola
 
-### RabbitMQ
-
-- Acceder a http://localhost:15672
-- Revisar exchange `video.events`
-
 ## ⚠️ Solución de Problemas
 
 ### Puerto 8000 ocupado
@@ -232,10 +206,6 @@ uvicorn app.main:app --reload --port 8001
 ### Puerto 5173 ocupado
 
 Vite toma el siguiente puerto disponible.
-
-### RabbitMQ no conecta
-
-El backend funciona igualmente.
 
 ### Error CORS
 
@@ -253,13 +223,6 @@ Verificar los orígenes en:
 
 `Ctrl + C`
 
-### RabbitMQ
-
-```bash
-docker ps
-docker stop <container_id>
-```
-
 ## 📝 Notas Importantes
 
 - Token por defecto: `test-token`.
@@ -271,5 +234,4 @@ docker stop <container_id>
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 - API Docs: http://localhost:8000/docs
-- RabbitMQ UI: http://localhost:15672
 

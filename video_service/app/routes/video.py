@@ -9,7 +9,6 @@ from app.models import (
 )
 from app.database import db
 from app.jwt_handler import generate_jitsi_token, verify_user_jwt
-from app.rabbitmq import rabbitmq_publisher
 from app.config import settings
 import logging
 
@@ -65,17 +64,6 @@ async def create_room(
         
         jitsi_url = f"https://{settings.JITSI_DOMAIN}/{request.room_name}"
         
-        await rabbitmq_publisher.publish(
-            "video.room.created",
-            {
-                "room_id": room.id,
-                "room_name": room.room_name,
-                "host_id": room.host_id,
-                "workspace_id": room.workspace_id,
-                "channel_id": room.channel_id,
-            }
-        )
-        
         return RoomResponse(
             room_id=room.id,
             room_name=room.room_name,
@@ -122,16 +110,6 @@ async def join_room(
             room_name=room.room_name,
             is_moderator=False,
             is_host=False
-        )
-        
-        await rabbitmq_publisher.publish(
-            "video.participant.joined",
-            {
-                "room_id": request.room_id,
-                "participant_id": participant["id"],
-                "user_id": request.user_id,
-                "user_name": request.user_name,
-            }
         )
         
         return ParticipantResponse(
@@ -202,14 +180,6 @@ async def delete_room(
             raise HTTPException(status_code=403, detail="Solo el host puede terminar la sala")
         
         await db.update_room_status(room_id, "ended")
-        
-        await rabbitmq_publisher.publish(
-            "video.room.ended",
-            {
-                "room_id": room_id,
-                "ended_by": current_user.get("user_id"),
-            }
-        )
         
         return {"message": "Sala terminada exitosamente"}
     except HTTPException:
