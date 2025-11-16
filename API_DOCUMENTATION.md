@@ -678,6 +678,8 @@ El token debe contener al menos:
 
 ## Integración con Jitsi
 
+> **⚠️ IMPORTANTE**: `meet.jit.si` tiene un límite de 5 minutos cuando se embebe en iframes. Solo es adecuado para desarrollo. Para producción, usa Jitsi as a Service (pago) o tu propio servidor Jitsi (gratuito pero requiere configuración).
+
 ### Construcción de URL de Jitsi
 
 El microservicio genera URLs base de Jitsi, pero el frontend construye la URL final con parámetros adicionales.
@@ -746,6 +748,30 @@ Los permisos necesarios son:
 - El microservicio genera tokens JWT, pero el servidor público `meet.jit.si` no los acepta
 - Para usar JWT necesitas tu propio servidor Jitsi
 - Los tokens JWT se generan pero no se usan con el servidor público
+
+### ⚠️ Limitaciones de meet.jit.si en iframes
+
+**Importante**: Cuando embebes `meet.jit.si` en un iframe, tiene limitaciones:
+
+- ❌ **Límite de tiempo**: Las llamadas se desconectan automáticamente después de **5 minutos**
+- ❌ **Solo para desarrollo/demostración**: No está diseñado para uso en producción
+- ❌ **Sin soporte oficial**: Jitsi recomienda usar sus servicios oficiales para producción
+
+**Solución para producción:**
+
+1. **Jitsi as a Service (JaaS)** - Servicio de pago gestionado
+   - ✅ Sin límite de tiempo
+   - ✅ Soporte para embedding
+   - ✅ Más estable y confiable
+   - 💰 Requiere suscripción de pago
+   - 🔗 Más información: https://jitsi.org/jitsi-as-a-service/
+
+2. **Servidor Jitsi propio** - Gratuito pero requiere configuración
+   - ✅ Sin límites de tiempo
+   - ✅ Control total de la infraestructura
+   - ✅ Uso gratuito del software
+   - ⚙️ Requiere configurar y mantener servidores propios
+   - 📚 Documentación: https://jitsi.github.io/handbook/docs/devops-guide/
 
 ---
 
@@ -912,11 +938,27 @@ Las configuraciones están en `video_service/app/config.py`:
 ### Producción
 
 Para producción, considera:
-1. Cambiar `JITSI_DOMAIN` a tu propio servidor Jitsi
-2. Implementar autenticación real con JWT
-3. Usar base de datos persistente (PostgreSQL, MongoDB, etc.)
-4. Configurar HTTPS
-5. Ajustar `CORS_ORIGINS` a tus dominios de producción
+
+1. **Configurar dominio de Jitsi**:
+   - **Opción A**: Cambiar `JITSI_DOMAIN` a tu propio servidor Jitsi (gratuito pero requiere infraestructura)
+   - **Opción B**: Usar Jitsi as a Service (JaaS) - de pago pero gestionado
+   - ⚠️ **No usar `meet.jit.si` en producción**: Tiene límite de 5 minutos en iframes
+
+2. **Autenticación**:
+   - Implementar autenticación real con JWT
+   - Eliminar el token `test-token` de desarrollo
+
+3. **Base de datos**:
+   - Migrar de memoria a base de datos persistente (PostgreSQL, MongoDB, etc.)
+
+4. **Infraestructura**:
+   - Configurar HTTPS
+   - Ajustar `CORS_ORIGINS` a tus dominios de producción
+   - Configurar balanceadores de carga si es necesario
+
+5. **Monitoreo**:
+   - Implementar logging y monitoreo de errores
+   - Configurar alertas para problemas de servicio
 
 ---
 

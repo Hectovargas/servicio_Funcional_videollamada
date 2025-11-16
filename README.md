@@ -97,10 +97,24 @@ https://meet.jit.si/{roomName}?userInfo.displayName={userName}
 
 ## ⚠️ Limitaciones
 
+- **Límite de tiempo**: `meet.jit.si` desconecta las llamadas después de 5 minutos cuando se embebe en iframes
+- **Solo para desarrollo**: El servidor público no está diseñado para uso en producción
 - Control programático limitado
 - No se reciben eventos de Jitsi desde el iframe
 - Sin soporte para JWT en servidor público
 - Personalización de interfaz restringida
+
+### 🚀 Opciones para Producción
+
+1. **Jitsi as a Service (JaaS)** - Servicio de pago gestionado
+   - Sin límite de tiempo
+   - Soporte oficial para embedding
+   - Más información: https://jitsi.org/jitsi-as-a-service/
+
+2. **Servidor Jitsi propio** - Gratuito pero requiere configuración
+   - Sin límites de tiempo
+   - Control total de la infraestructura
+   - Documentación: https://jitsi.github.io/handbook/docs/devops-guide/
 
 ## 🚀 Guía de Inicio - Proyecto Jitsi
 
